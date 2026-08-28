@@ -176,3 +176,12 @@ one file to read to satisfy yourself that nothing leaves the process.
 ---
 
 Status: not pushed, not minted, not seeded.
+
+---
+
+## Knowledge transfer
+
+[Knowledge Transfer for Grok](docs/KNOWLEDGE_TRANSFER_FOR_GROK.md) — written for the parallel implementation at
+`zistgah/panini_by_grok`: the fourteen cycler-dialect constructs the
+specification never demonstrates, the honest capability inventory, the
+federation model, and the working discipline this estate enforces.
