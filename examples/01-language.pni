@@ -1,0 +1,60 @@
+/*
+ The general-purpose core. Functions, recursion, closures, classes,
+ pattern matching, control flow. No prompts anywhere.
+*/
+
+FUNCTION factorial(n:Int) -> Int
+    IF n <= 1
+        RETURN 1
+    ELSE
+        RETURN n * factorial(n - 1)
+    END
+END
+
+FUNCTION compose(f:Function, g:Function) -> Function
+    RETURN FUNCTION(x:Any) -> Any
+        RETURN f(g(x))
+    END
+END
+
+CLASS Counter
+    FIELD count: Int
+    METHOD bump()
+        count = count + 1
+        RETURN count
+    END
+END
+
+PRINT "factorial(6) ="
+PRINT factorial(6)
+
+VAR double = FUNCTION(x:Int) -> Int
+    RETURN x * 2
+END
+VAR inc = FUNCTION(x:Int) -> Int
+    RETURN x + 1
+END
+VAR both = compose(double, inc)
+PRINT "compose(double, inc)(10) ="
+PRINT both(10)
+
+VAR c = new_Counter()
+c.bump()
+c.bump()
+PRINT "counter after two bumps ="
+PRINT c.count
+
+FOR i IN 0..5
+    CONTINUE IF i == 2
+    PRINT i
+END
+
+VAR grade = 87
+MATCH grade
+    CASE g WHEN g >= 90
+        PRINT "A"
+    CASE g WHEN g >= 80
+        PRINT "B"
+    CASE _
+        PRINT "C"
+END

@@ -1,0 +1,56 @@
+/*
+ The parts of PANINI that exist to stop a machine from bluffing.
+ Every refusal below is deliberate. Run it and read what it refuses.
+*/
+
+/* An untagged claim cannot be canonicalized. */
+CLAIM untagged
+    STATEMENT "The build passed."
+END
+
+CLAIM tagged
+    STATEMENT "The parser reports zero errors on the specification."
+    STATUS VERIFIED
+    EVIDENCE "panini selfcheck"
+    PROVENANCE "spec/PANINI_SELF_HOSTING_SPEC.pni"
+END
+
+PRINT "canonicalize an untagged claim:"
+PRINT canonicalize(untagged)
+PRINT "canonicalize a tagged one:"
+PRINT canonicalize(tagged)
+
+/* An artifact cannot be released without a human's exact typed word. */
+ARTIFACT report
+    TYPE "document"
+    FORMAT "markdown"
+    STATUS DRAFT
+END
+
+RELEASE report VERSION "1.0.0"
+
+/* A program cannot grant itself a capability. */
+GRANT filesystem.write
+SERIALIZE report TO "out/report.md"
+
+/* A simulation cannot promote itself to an experiment. */
+ARTIFACT plan
+    MODE SIMULATED
+END
+EXPERIMENT plan
+
+/* An unspecified body yields UNRESOLVED, never a plausible value. */
+FUNCTION not_yet_written() -> Int
+    ...
+END
+PRINT not_yet_written()
+
+/* An unknown verb is recorded and marked, never approximated. */
+FROTZ the_widget
+
+/* Anything outside the process yields to the host. This interpreter has
+   no provider and cannot acquire one. */
+MODEL m
+    PROVIDER "whoever the host chooses"
+END
+ASK m "what is the answer?"

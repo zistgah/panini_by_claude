@@ -1,0 +1,58 @@
+/*
+ A CYCLER is a lifecycle machine, not a list of prompts.
+ Stages hold operations. A GATE stops the machine until a person types
+ an exact word. Nothing here reaches outside the process by itself:
+ every outward step yields to the host, which decides what happens.
+
+ The run below SUSPENDS at the first outward step. That is the point: the
+ interpreter has no provider, so RETRIEVE hands the query to the host and
+ stops. Nothing downstream is guessed at in the meantime.
+
+ Run it:  panini run examples/03-cycler.pni
+ Then:    panini yields examples/03-cycler.pni    <- what it is waiting for
+*/
+
+ARTIFACT requirements
+    TYPE "document"
+    FORMAT "markdown"
+    STATUS DRAFT
+END
+
+ARTIFACT architecture
+    TYPE "document"
+    FORMAT "markdown"
+    STATUS DRAFT
+    DEPENDS_ON [requirements]
+END
+
+GATE HumanSignoff
+    REQUIRE "SIGNOFF architecture"
+END
+
+CYCLER SoftwareDevelopment
+    STAGE gather
+        RETRIEVE "stakeholder interviews"
+        DRAFT requirements
+    END
+
+    STAGE design
+        DERIVE architecture FROM requirements
+        REVIEW architecture
+    END
+
+    STAGE approve
+        GATE HumanSignoff
+    END
+
+    STAGE publish
+        RELEASE architecture VERSION "1.0.0"
+    END
+END
+
+RUN SoftwareDevelopment
+
+/* Ancestry survives the run, whether or not the run completed. */
+PRINT "architecture depends on:"
+PRINT architecture.dependsOn
+PRINT "architecture status (still DRAFT — nobody has signed anything off):"
+PRINT architecture.status

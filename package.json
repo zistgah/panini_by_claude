@@ -1,0 +1,49 @@
+{
+  "name": "panini",
+  "version": "0.1.0",
+  "description": "A parser and interpreter for PANINI, a general-purpose self-hosting computational language. Stage-0 bootstrap in JavaScript.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./lexer": "./src/lexer.js",
+    "./parser": "./src/parser.js",
+    "./values": "./src/values.js",
+    "./runtime": "./src/runtime.js",
+    "./interpreter": "./src/interpreter.js"
+  },
+  "bin": {
+    "panini": "bin/panini.mjs"
+  },
+  "files": [
+    "src/",
+    "bin/",
+    "spec/",
+    "examples/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node tests/panini.test.mjs",
+    "check": "node bin/panini.mjs check",
+    "selfcheck": "node bin/panini.mjs selfcheck",
+    "conformance": "node bin/panini.mjs conformance",
+    "invariants": "node bin/panini.mjs invariants",
+    "capabilities": "node bin/panini.mjs capabilities",
+    "deltas": "node bin/panini.mjs deltas"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "panini",
+    "language",
+    "interpreter",
+    "parser",
+    "provenance",
+    "artifacts"
+  ],
+  "license": "SEE LICENSE IN spec/PANINI_SELF_HOSTING_SPEC.pni",
+  "private": true
+}

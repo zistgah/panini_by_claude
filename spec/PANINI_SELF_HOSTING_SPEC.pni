@@ -1,0 +1,1767 @@
+/*
+ PANINI — SELF-HOSTING LANGUAGE + EXECUTION ENVIRONMENT
+ Canonical implementation specification
+ Version: 0.1.0
+ Status: constitutional / implementation-grade draft
+ Purpose:
+   Prove by construction that PANINI can express the language and
+   execution environment required to implement PANINI itself.
+
+ Core proposition:
+   PANINI can express PANINI.
+   The language is not merely a DSL for prompts or cyclers.
+   Cyclers are programs/configurations in PANINI.
+   GENIE is a native meta-cycler / agency abstraction.
+   FAKIR is a retrieval-first domainal guide.
+   Artifacts, files, MIME types, workflows, provenance, verification,
+   configuration management, agents, models, and execution are native.
+*/
+
+MODULE PANINI
+
+CONSTITUTION
+    NAME "PANINI"
+    KIND GENERAL_PURPOSE_COMPUTATIONAL_LANGUAGE
+    SELF_HOSTING TRUE
+    PURPOSE "Express computation, data, cognition, workflows, artifacts,
+             agents, language, systems engineering, and their own implementation."
+    PRINCIPLES
+        RETRIEVE_DONT_RECONSTRUCT
+        HUMAN_SOVEREIGNTY
+        EXPLICIT_EPISTEMIC_STATUS
+        PROVENANCE_PRESERVATION
+        DETERMINISTIC_ORCHESTRATION
+        PROVIDER_NEUTRALITY
+        MODALITY_INDEPENDENCE
+        PARADIGM_COMPOSITION
+        ARTIFACT_FIRST_EXECUTION
+        VERIFIABLE_REALIZATION
+        CONFIGURATION_MANAGEMENT
+        REPRODUCIBILITY
+    END
+END
+
+/*
+======================================================================
+I. LANGUAGE ONTOLOGY
+======================================================================
+*/
+
+TYPE Any
+TYPE Unit
+TYPE Bool
+TYPE Int
+TYPE Float
+TYPE Decimal
+TYPE String
+TYPE Symbol
+TYPE Bytes
+TYPE Duration
+TYPE Timestamp
+TYPE URI
+TYPE Regex
+TYPE Error
+
+TYPE Data
+TYPE Record
+TYPE Tuple
+TYPE List<T>
+TYPE Set<T>
+TYPE Map<K,V>
+TYPE Stream<T>
+TYPE Option<T>
+TYPE Result<T,E>
+
+TYPE Type
+TYPE Schema
+TYPE Constraint
+TYPE Rule
+TYPE Predicate
+TYPE Function
+TYPE Procedure
+TYPE Method
+TYPE Object
+TYPE Class
+TYPE Trait
+TYPE Module
+TYPE Package
+
+TYPE Event
+TYPE Signal
+TYPE State
+TYPE Transition
+TYPE Workflow
+TYPE Cycler
+TYPE Agent
+TYPE Model
+TYPE Tool
+TYPE Skill
+TYPE Resource
+
+TYPE File
+TYPE Artifact
+TYPE Deliverable
+TYPE Dataset
+TYPE Document
+TYPE Media
+TYPE Prompt
+TYPE Message
+TYPE Observation
+TYPE Measurement
+TYPE Evidence
+TYPE Claim
+TYPE Experiment
+TYPE Simulation
+TYPE Proof
+TYPE Test
+TYPE Report
+TYPE Manifest
+
+TYPE Domain
+TYPE Activity
+TYPE Occupation
+TYPE LearningDomain
+TYPE Varzish
+TYPE Estate
+TYPE Sovereign
+TYPE Mission
+
+/*
+ First-class executable values.
+*/
+FUNCTION identity(x: Any) -> Any
+    RETURN x
+END
+
+/*
+======================================================================
+II. PARADIGM COMPOSITION
+======================================================================
+
+PANINI permits multiple programming paradigms without making any one
+paradigm constitutive.
+
+Functional:
+    functions, closures, higher-order values, immutable data, map/filter/reduce
+
+Imperative:
+    variables, assignment, sequence, loops, mutation, exceptions
+
+Object-oriented:
+    objects, classes, methods, inheritance, composition, interfaces, traits
+
+Declarative:
+    rules, constraints, schemas, queries, configuration
+
+Logic:
+    predicates, facts, inference, proof obligations
+
+Reactive:
+    events, signals, watches, subscriptions
+
+Dataflow:
+    streams, pipelines, transformations
+
+Concurrent:
+    actors, tasks, futures, parallel blocks, join
+
+Workflow:
+    stages, gates, checkpoints, sign-off, iteration, rollback
+
+AI/Agent:
+    models, prompts, tools, agents, cognition, planning, evaluation
+
+Artifact/System:
+    files, MIME, manifests, provenance, versions, dependencies, release
+*/
+
+TRAIT Comparable<T>
+    FUNCTION compare(a:T, b:T) -> Int
+END
+
+INTERFACE Serializable<T>
+    FUNCTION serialize(x:T) -> Bytes
+    FUNCTION deserialize(b:Bytes) -> T
+END
+
+/*
+======================================================================
+III. CORE SYNTAX
+======================================================================
+*/
+
+SYNTAX
+    block       := KEYWORD [name] [parameters] BODY END
+    expression  := literal | identifier | call | lambda | object | collection
+    statement   := declaration | assignment | call | control | block
+    comment     := /* ... */ | // ...
+    string      := "..."
+    list        := [ ... ]
+    map         := { key: value, ... }
+    lambda      := FUNCTION(parameters) -> Type BODY END
+    annotation  := @name[(arguments)]
+END
+
+/*
+ Explicit control flow.
+*/
+FUNCTION factorial(n:Int) -> Int
+    IF n <= 1
+        RETURN 1
+    ELSE
+        RETURN n * factorial(n - 1)
+    END
+END
+
+FOR i IN 0..10
+    CONTINUE IF i == 5
+END
+
+FOREACH item IN collection
+    ...
+END
+
+WHILE condition
+    ...
+END
+
+UNTIL condition
+    ...
+END
+
+REPEAT 3
+    ...
+END
+
+TRY
+    ...
+CATCH error
+    ...
+FINALLY
+    ...
+END
+
+ASSERT condition
+REQUIRE condition
+ENSURE condition
+
+/*
+ Pattern matching.
+*/
+MATCH value
+    CASE x WHEN predicate(x)
+        ...
+    CASE _
+        ...
+END
+
+/*
+======================================================================
+IV. FUNCTIONS, OBJECTS, DATA, MODULES
+======================================================================
+*/
+
+FUNCTION compose(f:Function, g:Function) -> Function
+    RETURN FUNCTION(x)
+        RETURN f(g(x))
+    END
+END
+
+CLASS ArtifactIndex
+    FIELD entries: Map<String, Artifact>
+
+    METHOD add(a:Artifact)
+        entries[a.id] = a
+    END
+
+    METHOD get(id:String) -> Option<Artifact>
+        RETURN entries[id]
+    END
+END
+
+MODULE Standard
+    EXPORT Any, Unit, Bool, Int, Float, String
+    EXPORT Function, Object, Data
+END
+
+IMPORT Standard
+
+/*
+ Modules may be compiled, interpreted, distributed, or embedded.
+*/
+
+PACKAGE PANINI.Compiler
+PACKAGE PANINI.Runtime
+PACKAGE PANINI.StandardLibrary
+PACKAGE PANINI.Tools
+PACKAGE PANINI.Cyclers
+PACKAGE PANINI.AI
+PACKAGE PANINI.Verification
+PACKAGE PANINI.Provenance
+PACKAGE PANINI.Configuration
+
+/*
+======================================================================
+V. TYPE SYSTEM
+======================================================================
+*/
+
+TYPE TYPEOF(x:Any) -> Type
+
+TYPE Result<T,E>
+    OK(value:T)
+    ERR(error:E)
+END
+
+TYPE Refinement<T>
+    VALUE T
+    WHERE Constraint
+END
+
+SCHEMA Person
+    name: String
+    attributes: Map<String,Any>
+END
+
+CONSTRAINT positive(x:Int)
+    ASSERT x > 0
+END
+
+TYPE PositiveInt = Refinement<Int> WHERE x > 0
+
+/*
+ Types are inspectable at runtime and compile time.
+ Generic types, unions, records, structural interfaces, nominal types,
+ dependent/refinement constraints, and schema validation are supported.
+*/
+
+/*
+======================================================================
+VI. DATA / CONFIGURATION AS CODE
+======================================================================
+*/
+
+CONFIGURATION PANINI_BUILD
+    version = "0.1.0"
+    target = ["linux-x86_64", "linux-arm64"]
+    backend = ["native", "wasm", "container"]
+    optimization = "release"
+    reproducible = TRUE
+END
+
+/*
+ A block may itself be a value, configuration, file, or artifact.
+*/
+
+FILE "hello.pni"
+    MIME "text/x-panini"
+    ENCODING "utf-8"
+    CONTENT
+        FUNCTION main() -> Int
+            PRINT "Hello, PANINI"
+            RETURN 0
+        END
+    END
+END FILE
+
+FILE "schema.json"
+    MIME "application/json"
+    CONTENT
+        {"type":"object"}
+    END
+END FILE
+
+FILE "diagram.svg"
+    MIME "image/svg+xml"
+    CONTENT
+        "<svg></svg>"
+    END
+END FILE
+
+/*
+ MIME is semantic, not decorative.
+ PANINI may contain text, structured data, source, media references,
+ manifests, schemas, binaries, and other typed artifact payloads.
+*/
+
+/*
+======================================================================
+VII. ARTIFACT MODEL
+======================================================================
+*/
+
+ARTIFACT requirements
+    TYPE "specification"
+    FORMAT "text/markdown"
+    VERSION "1.0.0"
+    STATUS DRAFT
+    SOURCE "elicitation"
+    PROVENANCE
+        CREATED_BY "PANINI"
+        CREATED_AT NOW
+    END
+END
+
+DELIVERABLE architecture
+    TYPE SPECIFICATION
+    FORMAT "text/markdown"
+    VERSION "1.0"
+    STATUS DRAFT
+    DEPENDS_ON requirements
+END
+
+ARTIFACT_REVISION architecture
+    FROM architecture
+    CHANGE "replace transport layer"
+    PRESERVE_PROVENANCE TRUE
+END
+
+SIGNOFF architecture BY HUMAN
+RELEASE architecture VERSION "1.1.0"
+
+CHECKPOINT "architecture-approved"
+BASELINE "release-1"
+BRANCH "experimental"
+DIFF architecture@1.0 architecture@1.1
+MERGE "experimental" INTO "main"
+SUPERSEDE architecture@1.0 WITH architecture@1.1
+ARCHIVE architecture@1.0
+RESTORE architecture@1.0
+
+/*
+ Artifact state:
+   DRAFT -> REVIEW -> APPROVED -> RELEASED -> SUPERSEDED/ARCHIVED
+
+ Every derivation preserves ancestry.
+ Every release has a manifest and provenance graph.
+*/
+
+/*
+======================================================================
+VIII. PROVENANCE AND EPISTEMIC STATUS
+======================================================================
+*/
+
+ENUM EpistemicStatus
+    RETRIEVED
+    INFERRED
+    PROPOSED
+    UNRESOLVED
+    VERIFIED
+    OBSERVED
+    SIMULATED
+    EXPERIMENTAL
+    FALSIFIED
+END
+
+CLAIM c
+    STATUS RETRIEVED
+    SOURCE "authoritative-source"
+    EVIDENCE e
+END
+
+RULE CANONICAL_OUTPUT
+    REQUIRE every_statement.status IS_NOT NULL
+    REQUIRE every_statement.provenance IS_NOT NULL
+END
+
+/*
+ Untagged claims cannot enter canonical output.
+ Retrieval and inference are not silently interchangeable.
+ Simulation cannot become experiment.
+ Proposal cannot become observation.
+*/
+
+FUNCTION canonicalize(statement:Claim) -> Result<Claim,Error>
+    IF statement.status IS NULL
+        RETURN ERR("untagged claim")
+    END
+    IF statement.provenance IS NULL
+        RETURN ERR("missing provenance")
+    END
+    RETURN OK(statement)
+END
+
+/*
+======================================================================
+IX. QUERY / RETRIEVAL PRIMITIVES
+======================================================================
+*/
+
+INTERFACE Retriever
+    FUNCTION retrieve(query:Query) -> Result<List<Source>,Error>
+    FUNCTION read(source:Source) -> Result<Document,Error>
+    FUNCTION preserve(source:Source) -> Provenance
+END
+
+FUNCTION RETRIEVE(query:Query) -> Result<List<Source>,Error>
+    RETURN Runtime.retriever.retrieve(query)
+END
+
+FUNCTION READ(source:Source) -> Result<Document,Error>
+    RETURN Runtime.retriever.read(source)
+END
+
+/*
+ The semantic invariant is:
+     RETRIEVE -> READ -> INTERPRET -> CORRELATE -> VERIFY
+ not:
+     GENERATE -> ASSUME -> CLASSIFY -> ASSIGN
+*/
+
+/*
+======================================================================
+X. VERIFICATION / EXPERIMENT
+======================================================================
+*/
+
+FUNCTION VERIFY(artifact:Artifact, criterion:Constraint) -> Result<Bool,Error>
+    ...
+END
+
+FUNCTION SIMULATE(system:System, scenario:Scenario) -> Simulation
+    ...
+END
+
+FUNCTION EXPERIMENT(plan:ExperimentPlan) -> Result<MeasurementSet,Error>
+    REQUIRE plan.mode == EXPERIMENTAL
+    ...
+END
+
+FUNCTION FALSIFY(claim:Claim, tests:List<Test>) -> Result<Claim,Error>
+    ...
+END
+
+MEASUREMENT m
+    VALUE 0.0
+    UNIT "unit"
+    UNCERTAINTY 0.0
+    SOURCE "instrument-or-experiment"
+END
+
+RULE EXPERIMENT_GATE
+    REQUIRE simulation.status != EXPERIMENTAL
+    REQUIRE experiment.evidence EXISTS
+END
+
+/*
+======================================================================
+XI. EVENTS, STATE, REACTIVITY, CONCURRENCY
+======================================================================
+*/
+
+EVENT ArtifactChanged(artifact:Artifact)
+
+WATCH ArtifactChanged(a)
+    INVALIDATE downstream(a)
+    RUN affected_tests(a)
+END
+
+SIGNAL "requirements-approved"
+
+ON "requirements-approved"
+    RUN architecture_cycle
+END
+
+PARALLEL
+    RUN test_unit
+    RUN test_integration
+    RUN test_security
+JOIN
+
+ACTOR ArtifactManager
+    ON ArtifactChanged(a)
+        ...
+    END
+END
+
+/*
+ State transition model:
+       configuration -> inclination/selection -> act -> execution
+       -> observation -> next configuration
+*/
+
+/*
+======================================================================
+XII. WORKFLOW / CYCLE / CYCLER MODEL
+======================================================================
+*/
+
+TYPE Stage
+TYPE Gate
+TYPE IterationPolicy
+TYPE ExitCondition
+
+CYCLER SoftwareDevelopment
+    PURPOSE "Take incomplete intent through verified deliverables."
+
+    STAGE INTENT
+        ELICIT user.intent
+        CAPTURE concept
+        STRUCTURE concept
+    END
+
+    STAGE REQUIREMENTS
+        ELICIT requirements
+        STRUCTURE requirements
+        REVIEW requirements
+        REVISE requirements
+        SIGNOFF requirements
+    END
+
+    STAGE ARCHITECTURE
+        DERIVE architecture FROM requirements
+        REVIEW architecture
+        REVISE architecture
+        SIGNOFF architecture
+    END
+
+    STAGE DESIGN
+        DERIVE design FROM architecture
+        REVIEW design
+        REVISE design
+        SIGNOFF design
+    END
+
+    STAGE IMPLEMENTATION
+        REALIZE implementation FROM design
+        TEST implementation
+        REVISE implementation
+    END
+
+    STAGE VERIFICATION
+        VERIFY implementation AGAINST requirements
+        VERIFY implementation AGAINST design
+    END
+
+    STAGE RELEASE
+        PACKAGE
+        SIGNOFF
+        PUBLISH
+        PRESERVE
+    END
+END
+
+/*
+ Cycler semantics are lifecycle semantics, not merely prompt sequencing.
+ Prompts are operations inside stages.
+*/
+
+/*
+ Actual logic is first-class.
+*/
+AFTER requirements.ITERATIONS >= 3
+    GENERATE requirements.summary
+    REQUEST HUMAN SIGNOFF
+END
+
+UNTIL architecture.status == APPROVED
+    REVIEW architecture
+    REVISE architecture
+END
+
+WHEN deliverable.changed
+    RUN affected_tests
+    INVALIDATE downstream.artifacts
+END
+
+/*
+ Resolution is orthogonal to language:
+*/
+RESOLUTION EASY
+RESOLUTION MID
+RESOLUTION PRO
+
+/*
+======================================================================
+XIII. COGNITIVE / AI / AGENT SUBSTRATE
+======================================================================
+*/
+
+MODEL claude
+    PROVIDER "external"
+    CAPABILITIES ["language", "reasoning"]
+END
+
+MODEL local
+    PROVIDER "local"
+    RUNTIME "configured-runtime"
+END
+
+MODEL user_api
+    PROVIDER "user"
+    CREDENTIAL ENV("PANINI_MODEL_KEY")
+END
+
+PROMPT p
+    ROLE "architect"
+    INPUT requirements
+    OUTPUT architecture
+END
+
+FUNCTION ASK(model:Model, prompt:Prompt) -> Result<Message,Error>
+    ...
+END
+
+AGENT Agent
+    MEMORY memory
+    MODELS [claude, local]
+    TOOLS []
+    GOALS []
+    POLICY human_sovereignty
+END
+
+AGENT SoftwareArchitect
+    GOAL "produce verified architecture"
+    TOOL repository
+    TOOL verifier
+    MODEL claude
+END
+
+/*
+ AI is a computational substrate.
+ The workflow/orchestration semantics remain explicit.
+ Provider identity is not constitutive of PANINI.
+*/
+
+/*
+======================================================================
+XIV. GENIE — META-CYCLER / AGENCY
+======================================================================
+*/
+
+META_CYCLER GENIE
+    PURPOSE "Bring agency to Synthetiforms and drive complete
+             conceptualization and realization of deliverables."
+
+    INVOCATION
+        WHEN user.cannot_conceptualize
+        WHEN user.is_stuck
+        WHEN cross_cycler_composition_required
+        WHEN end_to_end_deliverable_drive_required
+    END
+
+    OPERATIONS
+        CONCEIVE
+        OBSERVE
+        IMAGINE
+        ASSOCIATE
+        TRANSFORM
+        COMBINE
+        CONTRAST
+        ABSTRACT
+        CONCRETIZE
+        NARRATE
+        DRAMATIZE
+        VISUALIZE
+        CHARACTERIZE
+        SPATIALIZE
+        MUSICALIZE
+        EMBODY
+        ITERATE
+        CRITIQUE
+        REMIX
+        SERIALIZE
+        PUBLISH
+    END
+
+    COMPOSE(cyclers...)
+    ELEVATE(cycler) -> GENIE
+    DESCEND(genie, cycler_category)
+    SPLIT(genie) -> List<GENIE>
+    MERGE(genies...) -> GENIE
+END
+
+/*
+ GENIE is not the language.
+ GENIE is a native meta-cycler.
+ Any cycler may elevate into a GENIE.
+ GENIE may descend into one or many cycler categories.
+ Multiple GENIE instances may split or merge.
+ This supports heterogeneous infrastructure.
+*/
+
+/*
+ Persistent creative state.
+*/
+STATE PersistentCreativeState
+    unified_semantic_world
+    narrative_memory
+    aesthetic_memory
+    creative_identity
+    world_model
+END
+
+CYCLE CreativeCognition
+    MEMORY
+    GENERATIVE_FIELD
+    CORRESPONDENCE
+    ABSTRACTION
+    INTEGRATION
+    CRYSTALLIZATION
+    REALIZATION
+    OBSERVATION
+    MEMORY
+    RE_EXPANSION
+END
+
+/*
+ Operational GENIE lifecycle:
+*/
+CYCLE ResearchArtifact
+    DISCOVER
+    SPECIFY
+    FORMALIZE
+    IMPLEMENT
+    VERIFY
+    SIMULATE
+    EXPERIMENT
+    FALSIFY
+    DOCUMENT
+    AUDIT
+    REFINE
+END
+
+/*
+======================================================================
+XV. FAKIR — RETRIEVAL-FIRST DOMAINAL GUIDE
+======================================================================
+*/
+
+CYCLER FAKIR
+    PURPOSE "Guide sovereigns through domainal reality and mission."
+
+    METHOD
+        RETRIEVE
+        READ
+        INTERPRET
+        CORRELATE
+        VERIFY
+        EVIDENCE
+        GOVERN
+        PRESERVE
+        GUIDE
+        TRANSFORM
+    END
+
+    SOURCES
+        ISIC "UN economic activity domains"
+        ISCO "ILO occupation/work domains"
+        ISCED "UNESCO UIS education/learning domains"
+        OTHER_ERUDITION
+    END
+
+    PRINCIPLE
+        RETRIEVE_DONT_RECONSTRUCT
+    END
+
+    DOMAIN_MODEL
+        ACTIVITY
+        WORK
+        LEARNING
+        ERUDITION
+        COMPOSITE_DOMAINS
+    END
+
+    FORMATION
+        GUIDE epistemological_dukedom
+    END
+
+    POST_ABDICATION
+        GUIDE mission -> domain(s)
+        ALLOW composite_domain
+        GUIDE_TO appropriate_varzish
+    END
+END
+
+/*
+ FAKIR retrieves domains, not the classifications as identity.
+ FAKIR does not assign a sovereign to a taxonomy.
+ It orients domainal terrain.
+*/
+
+/*
+======================================================================
+XVI. CHARBAGH — HUMANESQUE TRIAGE / WAYFINDING
+======================================================================
+*/
+
+CYCLER CHARBAGH
+    PURPOSE "Humanesque triage and wayfinding."
+
+    ARRIVE
+    ELICIT
+    RETRIEVE
+    MAP
+    NAVIGATE
+    COMPOSE
+    DERIVE
+    ENTER
+    REMEMBER
+
+    ROUTES
+        EXISTING_ESTATE
+        COMPOSITE_ESTATES
+        DERIVE_ESTATES
+        INVOKE_GENIE
+    END
+END
+
+/*
+ FAKIR retrieves.
+ Charbagh routes.
+ GENIE conceives.
+*/
+
+/*
+======================================================================
+XVII. ESTATE / SOVEREIGNTY MODEL
+======================================================================
+*/
+
+TYPE Sovereign
+TYPE Dukedom
+TYPE Janapad
+TYPE Mahajanapad
+TYPE Estate
+
+FUNCTION constituteEstate(
+    sovereign:Sovereign,
+    retrievedSources:List<Source>,
+    configuration:Configuration
+) -> Result<Estate,Error>
+    REQUIRE all retrievedSources.have_provenance
+    REQUIRE human_review == TRUE
+    ...
+END
+
+/*
+ An estate may be derived rather than selected.
+ Plural inheritance is representable.
+*/
+
+ESTATE Humanesque
+    KIND "constitutional/civilizational envelope"
+END
+
+ESTATE AyeAI
+    KIND "cognitive/technical estate"
+END
+
+ESTATE Zistgah
+    KIND "living ecosystem / infrastructure estate"
+END
+
+/*
+======================================================================
+XVIII. VARZISH
+======================================================================
+*/
+
+TYPE Varzish
+    practices
+    disciplines
+    methods
+    traditions
+    techniques
+    institutions
+    knowledge
+    evidence
+    learner_state
+END
+
+FUNCTION findVarzish(domain:Domain) -> Result<List<Varzish>,Error>
+    RETURN RETRIEVE(domain.varzish_query)
+END
+
+/*
+======================================================================
+XIX. LANGUAGE / MULTISCRIPT / ILM SUBSTRATE
+======================================================================
+*/
+
+MODULE ILM
+    PURPOSE "Integrative Linguistic Multiscript representation."
+    TYPE SemanticState
+    FUNCTION realize(state:SemanticState, language_or_script:Any)
+        ...
+    END
+END
+
+/*
+ Semantic state is not identical to one language, script, or modality.
+*/
+FUNCTION realizeSemantic(
+    state:ILM.SemanticState,
+    target:Any
+) -> Artifact
+    ...
+END
+
+/*
+ PANINI source itself may be represented through language/script adapters.
+*/
+
+/*
+======================================================================
+XX. MULTIMODALITY
+======================================================================
+*/
+
+ENUM Modality
+    TEXT
+    IMAGE
+    AUDIO
+    VIDEO
+    MOVEMENT
+    IMMERSIVE
+    EMBODIED
+    STRUCTURED_DATA
+    CODE
+END
+
+FUNCTION REALIZE(state:Any, modality:Modality) -> Artifact
+    ...
+END
+
+/*
+ One semantic state -> many realizations.
+*/
+
+/*
+======================================================================
+XXI. CEM / SUBSTRATE ABSTRACTION
+======================================================================
+*/
+
+INTERFACE CEM
+    FUNCTION allocate(resource:Resource) -> Result<ResourceHandle,Error>
+    FUNCTION execute(task:Task) -> Result<ExecutionResult,Error>
+    FUNCTION observe(handle:ResourceHandle) -> Observation
+END
+
+/*
+ CEM abstracts physical/virtual substrate.
+ PANINI semantics do not depend on one machine, runtime, cloud,
+ accelerator, model provider, or operating system.
+*/
+
+/*
+======================================================================
+XXII. EXECUTION MODEL
+======================================================================
+*/
+
+ENUM ExecutionMode
+    INTERPRETED
+    COMPILED
+    JIT
+    AOT
+    WASM
+    CONTAINER
+    DISTRIBUTED
+END
+
+RUNTIME PANINI_RUNTIME
+    MODES [
+        INTERPRETED,
+        COMPILED,
+        JIT,
+        AOT,
+        WASM,
+        CONTAINER,
+        DISTRIBUTED
+    ]
+
+    COMPONENT LEXER
+    COMPONENT PARSER
+    COMPONENT AST
+    COMPONENT TYPECHECKER
+    COMPONENT SEMANTIC_ANALYZER
+    COMPONENT IR_LOWERER
+    COMPONENT OPTIMIZER
+    COMPONENT CODEGEN
+    COMPONENT BYTECODE_VM
+    COMPONENT SCHEDULER
+    COMPONENT EVENT_ENGINE
+    COMPONENT ARTIFACT_MANAGER
+    COMPONENT PROVENANCE_ENGINE
+    COMPONENT VERIFIER
+    COMPONENT PACKAGE_MANAGER
+    COMPONENT MODEL_ADAPTER
+    COMPONENT TOOL_RUNTIME
+    COMPONENT FILE_RUNTIME
+END
+
+/*
+======================================================================
+XXIII. SELF-HOSTING COMPILER
+======================================================================
+*/
+
+TYPE Token
+TYPE ASTNode
+TYPE IRNode
+TYPE MachineCode
+TYPE Bytecode
+
+FUNCTION lex(source:String) -> List<Token>
+    ...
+END
+
+FUNCTION parse(tokens:List<Token>) -> ASTNode
+    ...
+END
+
+FUNCTION typecheck(ast:ASTNode) -> Result<ASTNode,Error>
+    ...
+END
+
+FUNCTION lower(ast:ASTNode) -> IRNode
+    ...
+END
+
+FUNCTION optimize(ir:IRNode) -> IRNode
+    ...
+END
+
+FUNCTION codegen(ir:IRNode, target:ExecutionMode) -> Bytes
+    ...
+END
+
+FUNCTION compile(source:String, target:ExecutionMode) -> Artifact
+    tokens = lex(source)
+    ast = parse(tokens)
+    typed = typecheck(ast)
+    ir = lower(typed)
+    optimized = optimize(ir)
+    binary = codegen(optimized, target)
+    RETURN Artifact(binary)
+END
+
+/*
+ Self-hosting bootstrap stages:
+    Stage 0: minimal external bootstrap implementation.
+    Stage 1: PANINI lexer/parser/AST in PANINI.
+    Stage 2: PANINI type checker and semantic analyzer in PANINI.
+    Stage 3: PANINI IR/lowering in PANINI.
+    Stage 4: PANINI optimizer/code generators in PANINI.
+    Stage 5: PANINI compiler compiles PANINI compiler.
+    Stage 6: bootstrap compiler becomes self-hosting.
+*/
+
+/*
+======================================================================
+XXIV. CAN PANINI EXPRESS PANINI?
+======================================================================
+*/
+
+MODULE PANINI.Language
+    TYPE Token
+    TYPE AST
+    TYPE Type
+    TYPE Constraint
+    TYPE IR
+    TYPE Backend
+    FUNCTION lex
+    FUNCTION parse
+    FUNCTION typecheck
+    FUNCTION lower
+    FUNCTION optimize
+    FUNCTION compile
+END
+
+MODULE PANINI.CompilerSource
+    IMPORT PANINI.Language
+
+    FUNCTION main(source:String, target:ExecutionMode) -> Artifact
+        RETURN PANINI.Language.compile(source, target)
+    END
+END
+
+PROGRAM bootstrap
+    source = READ FILE "PANINI.Compiler.pni"
+    compiler_artifact = PANINI.CompilerSource.main(source, NATIVE)
+    WRITE compiler_artifact TO "build/panini-bootstrap"
+END
+
+ASSERT PANINI.CompilerSource CAN_COMPILE PANINI.CompilerSource
+
+/*
+ This assertion is the formal answer:
+    PANINI can express the language PANINI needs to build PANINI.
+*/
+
+/*
+======================================================================
+XXV. BOOTSTRAP SPECIFICATION
+======================================================================
+*/
+
+BOOTSTRAP PANINI
+    INPUT external_minimal_runtime
+
+    STAGE 0
+        BUILD "bootstrap/panini0"
+    END
+
+    STAGE 1
+        COMPILE "src/panini/lexer.pni"
+        COMPILE "src/panini/parser.pni"
+        COMPILE "src/panini/ast.pni"
+    END
+
+    STAGE 2
+        COMPILE "src/panini/typechecker.pni"
+        COMPILE "src/panini/semantic.pni"
+    END
+
+    STAGE 3
+        COMPILE "src/panini/ir.pni"
+        COMPILE "src/panini/lowering.pni"
+    END
+
+    STAGE 4
+        COMPILE "src/panini/optimizer.pni"
+        COMPILE "src/panini/backends.pni"
+    END
+
+    STAGE 5
+        SELF_COMPILE "src/panini/compiler.pni"
+    END
+
+    STAGE 6
+        COMPARE stage5.output WITH stage5.compiler
+        VERIFY bootstrap_consistency
+    END
+END
+
+/*
+======================================================================
+XXVI. STANDARD LIBRARY
+======================================================================
+*/
+
+MODULE Std
+    MODULE Core
+    MODULE Collections
+    MODULE Math
+    MODULE Time
+    MODULE IO
+    MODULE FS
+    MODULE Net
+    MODULE Process
+    MODULE Concurrency
+    MODULE Serialization
+    MODULE Regex
+    MODULE Crypto
+    MODULE MIME
+    MODULE JSON
+    MODULE XML
+    MODULE YAML
+    MODULE Markdown
+    MODULE Testing
+    MODULE Logging
+    MODULE Reflection
+    MODULE Schema
+    MODULE Query
+    MODULE Events
+    MODULE Workflow
+    MODULE Artifacts
+    MODULE Provenance
+    MODULE Verification
+    MODULE AI
+    MODULE Agents
+    MODULE Media
+END
+
+/*
+======================================================================
+XXVII. PACKAGE / REPOSITORY MODEL
+======================================================================
+*/
+
+PACKAGE PANINI
+    VERSION "0.1.0"
+
+    DIRECTORY "src"
+    DIRECTORY "stdlib"
+    DIRECTORY "compiler"
+    DIRECTORY "runtime"
+    DIRECTORY "tools"
+    DIRECTORY "tests"
+    DIRECTORY "examples"
+    DIRECTORY "docs"
+    DIRECTORY "spec"
+    DIRECTORY "docker"
+    DIRECTORY "scripts"
+    DIRECTORY ".github"
+END
+
+FILE "README.md"
+    MIME "text/markdown"
+    GENERATE_FROM PANINI.DOCUMENTATION
+END
+
+FILE "LICENSE"
+    MIME "text/plain"
+END
+
+FILE "panini.lock"
+    MIME "application/vnd.panini.lock"
+END
+
+FILE "Dockerfile"
+    MIME "text/plain"
+    CONTENT
+        "FROM ubuntu:latest
+         COPY build/panini /usr/local/bin/panini
+         ENTRYPOINT [""panini""]"
+    END
+END
+
+FILE "docker-compose.yml"
+    MIME "application/yaml"
+END
+
+FILE ".github/workflows/build.yml"
+    MIME "text/yaml"
+END
+
+/*
+ PANINI can describe its own repository, build system, containers,
+ scripts, CI, manifests, and documentation.
+*/
+
+/*
+======================================================================
+XXVIII. TESTING
+======================================================================
+*/
+
+TEST lexer_basic
+    INPUT "FUNCTION f(x:Int) -> Int RETURN x END"
+    EXPECT token_count > 0
+END
+
+TEST parser_basic
+    INPUT "RETURN 42"
+    EXPECT parse.success == TRUE
+END
+
+TEST typechecker_basic
+    INPUT "FUNCTION f(x:Int)->Int RETURN x END"
+    EXPECT typecheck.success == TRUE
+END
+
+PROPERTY compiler_idempotence
+    FORALL source IN valid_panini_sources
+        a = compile(source, NATIVE)
+        b = compile(source, NATIVE)
+        ASSERT reproducibly_equal(a, b)
+    END
+END
+
+TEST self_hosting
+    compiler = compile("src/panini/compiler.pni", NATIVE)
+    ASSERT compiler.success == TRUE
+END
+
+/*
+======================================================================
+XXIX. SECURITY / CAPABILITY MODEL
+======================================================================
+*/
+
+CAPABILITY filesystem.read
+CAPABILITY filesystem.write
+CAPABILITY process.spawn
+CAPABILITY network.connect
+CAPABILITY model.invoke
+CAPABILITY tool.execute
+CAPABILITY artifact.publish
+CAPABILITY human.request
+
+POLICY DEFAULT_DENY
+POLICY least_privilege
+POLICY explicit_grant
+
+AGENT restricted_agent
+    CAPABILITIES [filesystem.read, artifact.write]
+END
+
+/*
+ External effects require capabilities.
+ Pure computation can remain sandboxed.
+*/
+
+/*
+======================================================================
+XXX. HUMAN SOVEREIGNTY / APPROVAL
+======================================================================
+*/
+
+GATE HumanSignoff
+    TYPE HUMAN
+    REQUIRED_FOR [
+        constitutional_change,
+        estate_derivation,
+        release,
+        destructive_operation,
+        irreversible_external_action
+    ]
+END
+
+REQUEST HUMAN_SIGNOFF architecture
+
+/*
+======================================================================
+XXXI. DISTRIBUTION / HETEROGENEOUS INFRASTRUCTURE
+======================================================================
+*/
+
+RESOURCE cpu
+RESOURCE gpu
+RESOURCE accelerator
+RESOURCE local_model
+RESOURCE remote_model
+RESOURCE filesystem
+RESOURCE database
+RESOURCE network_service
+RESOURCE human
+
+TASK compile_task
+    REQUIRE cpu
+    PREFER local_model
+END
+
+SCHEDULE compile_task
+    ON ANY_CAPABLE_BACKEND
+    PRESERVE_SEMANTICS TRUE
+END
+
+/*
+ The same PANINI program may execute across heterogeneous substrate.
+ Backend selection is separated from language semantics.
+*/
+
+/*
+======================================================================
+XXXII. SERIALIZATION / RESUMABILITY
+======================================================================
+*/
+
+SERIALIZE state TO "state.json"
+CHECKPOINT state AS "checkpoint-001"
+RESTORE state FROM "checkpoint-001"
+
+RESUME cycler FROM checkpoint
+
+/*
+ Every long-running cycler/agent may be checkpointed and resumed.
+*/
+
+/*
+======================================================================
+XXXIII. ERROR / RECOVERY SEMANTICS
+======================================================================
+*/
+
+ENUM FailureMode
+    PARSE_ERROR
+    TYPE_ERROR
+    RUNTIME_ERROR
+    RESOURCE_ERROR
+    NETWORK_ERROR
+    MODEL_ERROR
+    VALIDATION_ERROR
+    PROVENANCE_ERROR
+    SIGNOFF_REQUIRED
+    CAPABILITY_DENIED
+    EVIDENCE_INSUFFICIENT
+    UNRESOLVED
+END
+
+RECOVERY
+    RETRY
+    BACKOFF
+    FALLBACK
+    ROLLBACK
+    CHECKPOINT
+    ESCALATE_HUMAN
+    MARK_UNRESOLVED
+END
+
+/*
+ Failure is data.
+ A failed artifact is not silently promoted to success.
+*/
+
+/*
+======================================================================
+XXXIV. RESEARCH / ARTIFACT CONSTRUCTION OS
+======================================================================
+*/
+
+CYCLER GENIE_RESEARCH
+    DISCOVER
+    SPECIFY
+    FORMALIZE
+    IMPLEMENT
+    VERIFY
+    SIMULATE
+    EXPERIMENT
+    FALSIFY
+    DOCUMENT
+    AUDIT
+    REFINE
+END
+
+RULE prompt_is_operation
+    REQUIRE every_prompt HAS purpose
+    REQUIRE every_prompt CONTRIBUTES_TO artifact_lifecycle
+END
+
+/*
+======================================================================
+XXXV. PANINI SELF-DESCRIPTION
+======================================================================
+*/
+
+DOCUMENT PANINI_SPECIFICATION
+    TITLE "PANINI Self-Hosting Language and Execution Environment"
+    SOURCES [PANINI.CONSTITUTION]
+    ARTIFACTS [
+        language_specification,
+        compiler,
+        runtime,
+        standard_library,
+        package_manager,
+        verifier,
+        documentation,
+        tests,
+        containers,
+        CI
+    ]
+END
+
+DELIVERABLE PANINI_IMPLEMENTATION
+    INCLUDES [
+        lexer,
+        parser,
+        AST,
+        typechecker,
+        semantic_analyzer,
+        IR,
+        lowering,
+        optimizer,
+        code_generators,
+        bytecode_vm,
+        runtime,
+        scheduler,
+        event_engine,
+        artifact_manager,
+        provenance_engine,
+        verifier,
+        package_manager,
+        model_adapters,
+        tool_runtime,
+        filesystem_runtime,
+        standard_library
+    ]
+    VERIFIED_BY self_hosting
+END
+
+/*
+======================================================================
+XXXVI. EXECUTION OF THE SPECIFICATION
+======================================================================
+*/
+
+PROGRAM panini_build
+    RETRIEVE canonical_sources
+    READ canonical_sources
+    VERIFY source_integrity
+    COMPILE PANINI.Compiler
+    BUILD PANINI.Runtime
+    BUILD PANINI.StandardLibrary
+    BUILD PANINI.Tools
+    BUILD PANINI.Verification
+    BUILD PANINI.AI
+    BUILD PANINI.Cyclers
+    BUILD containers
+    RUN tests
+    RUN self_hosting
+    GENERATE manifest
+    SIGNOFF HUMAN
+    RELEASE PANINI
+END
+
+/*
+======================================================================
+XXXVII. ARCHITECTURAL INVARIANTS
+======================================================================
+*/
+
+INVARIANT I1
+    PANINI_IS_GENERAL_PURPOSE == TRUE
+
+INVARIANT I2
+    PANINI_IS_SELF_HOSTING == TRUE
+
+INVARIANT I3
+    CYCLER_IS_PROGRAMMABLE_LIFECYCLE == TRUE
+
+INVARIANT I4
+    GENIE_IS_META_CYCLER == TRUE
+
+INVARIANT I5
+    FAKIR_RETRIEVES_DONT_RECONSTRUCT == TRUE
+
+INVARIANT I6
+    ARTIFACTS_ARE_FIRST_CLASS == TRUE
+
+INVARIANT I7
+    FILE_BLOCKS_HAVE_SEMANTIC_MIME == TRUE
+
+INVARIANT I8
+    PROVENANCE_IS_PRESERVED == TRUE
+
+INVARIANT I9
+    EPISTEMIC_STATUS_IS_EXPLICIT == TRUE
+
+INVARIANT I10
+    SIMULATION_CANNOT_BECOME_EXPERIMENT == TRUE
+
+INVARIANT I11
+    HUMAN_SIGNOFF_IS_EXPLICIT == TRUE
+
+INVARIANT I12
+    PROVIDERS_ARE_REPLACEABLE == TRUE
+
+INVARIANT I13
+    SUBSTRATE_IS_ABSTRACTED == TRUE
+
+INVARIANT I14
+    PARADIGMS_ARE_COMPOSABLE == TRUE
+
+INVARIANT I15
+    PANINI_CAN_EXPRESS_ITS_OWN_IMPLEMENTATION == TRUE
+
+/*
+======================================================================
+XXXVIII. FINAL SELF-HOSTING THEOREM
+======================================================================
+*/
+
+THEOREM PANINI_SELF_HOSTING
+    GIVEN
+        PANINI_LANGUAGE_PRIMITIVES
+        PANINI_COMPILER_MODEL
+        PANINI_RUNTIME_MODEL
+        PANINI_ARTIFACT_MODEL
+        PANINI_WORKFLOW_MODEL
+        PANINI_VERIFICATION_MODEL
+        PANINI_PROVENANCE_MODEL
+        PANINI_PACKAGE_MODEL
+
+    DEFINE
+        PANINI_COMPILER IN PANINI
+        PANINI_RUNTIME INTERFACES IN PANINI
+        PANINI_STDLIB IN PANINI
+        PANINI_TESTS IN PANINI
+        PANINI_BUILD IN PANINI
+        PANINI_DISTRIBUTION IN PANINI
+
+    REQUIRE
+        PANINI_COMPILER CAN_PARSE PANINI
+        PANINI_COMPILER CAN_TYPECHECK PANINI
+        PANINI_COMPILER CAN_LOWER PANINI
+        PANINI_COMPILER CAN_GENERATE_TARGETS
+        PANINI_RUNTIME CAN_EXECUTE PANINI
+        PANINI_BUILD CAN_BUILD PANINI
+        PANINI_TESTS CAN_VERIFY PANINI
+
+    CONCLUDE
+        PANINI_CAN_EXPRESS_THE_LANGUAGE_REQUIRED_TO_BUILD_PANINI == TRUE
+END
+
+/*
+======================================================================
+XXXIX. IMPLEMENTATION CONTRACT FOR CLAUDE / BUILD AGENT
+======================================================================
+
+The implementation agent SHALL:
+
+1. Treat this file as a language/architecture specification, not as
+   a prompt template.
+
+2. Produce a Git repository with:
+       /spec
+       /src
+       /compiler
+       /runtime
+       /stdlib
+       /tools
+       /tests
+       /examples
+       /docs
+       /docker
+       /scripts
+       /.github/workflows
+
+3. Implement a minimal external bootstrap first.
+
+4. Implement the PANINI lexer, parser, AST and type system.
+
+5. Implement the semantic IR and lowering pipeline.
+
+6. Implement an interpreter/VM sufficient to run PANINI source.
+
+7. Implement native/WASM/container targets as feasible without changing
+   language semantics.
+
+8. Implement artifact/file/MIME/provenance/versioning primitives.
+
+9. Implement workflow/cycler semantics.
+
+10. Implement AI/model/tool interfaces as replaceable adapters.
+
+11. Implement GENIE as a meta-cycler library/runtime abstraction,
+    not as the definition of PANINI.
+
+12. Implement FAKIR as a retrieval-first library/cycler with explicit
+    provenance and source boundaries.
+
+13. Implement Charbagh as a Humanesque triage/wayfinding cycler.
+
+14. Implement verification, tests, capability security and human gates.
+
+15. Implement deterministic bootstrap tests.
+
+16. Compile the PANINI compiler using the PANINI compiler.
+
+17. Compare bootstrap generations and record reproducibility evidence.
+
+18. Generate Dockerfiles, compose definitions, shell scripts, CI and
+    release manifests from PANINI configuration where practical.
+
+19. Never silently invent missing canonical source material.
+    Mark unresolved material UNRESOLVED and preserve provenance.
+
+20. Do not collapse PANINI into:
+       a prompt DSL,
+       a workflow-only DSL,
+       a creative-only language,
+       an AI wrapper,
+       a configuration language,
+       or a single programming paradigm.
+
+The implementation is complete only when PANINI can materially express,
+build, test, package, execute, and verify the core PANINI implementation
+using PANINI itself.
+
+HAIL PANINI.
+*/
+
+END MODULE PANINI
